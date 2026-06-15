@@ -4,7 +4,7 @@ using CloudTicketAzure.Core.Entities;
 
 namespace CloudTicketAzure.Infrastructure.Data.Configurations
 {
-    public class TicketConffiguration : IEntityTypeConfiguration<Ticket>
+    public class TicketConfiguration : IEntityTypeConfiguration<Ticket>
     {
         public void Configure(EntityTypeBuilder<Ticket> builder)
         {

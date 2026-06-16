@@ -4,8 +4,7 @@ import { BsCheckCircleFill } from 'react-icons/bs';
 export default function OrderRow({ order, index }) {
   const { id, eventName, totalAmount, purchaseDate } = order;
 
-  // Date formatting
-  const formattedDate = new Date(purchaseDate).toLocaleDateString('uk-UA', {
+  const formattedDate = new Date(purchaseDate).toLocaleDateString('en-US', {
     year: 'numeric',
     month: 'short',
     day: 'numeric',
@@ -22,12 +21,12 @@ export default function OrderRow({ order, index }) {
         <code className="text-primary">#{shortId}</code>
       </td>
       <td className="fw-semibold">{eventName}</td>
-      <td>{totalAmount.toLocaleString('uk-UA')} ₴</td>
+      <td>${totalAmount.toLocaleString('en-US', { minimumFractionDigits: 2 })}</td>
       <td className="text-muted">{formattedDate}</td>
       <td>
         <Badge bg="success" className="d-inline-flex align-items-center gap-1">
           <BsCheckCircleFill size={12} />
-          Оплачено
+          Paid
         </Badge>
       </td>
     </tr>

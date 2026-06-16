@@ -43,7 +43,7 @@ public class OutboxProcessor : BackgroundService
 
         var messages = await dbContext.OutboxMessages
             .Where(m => m.ProcessedOn == null)
-            .OrderBy(m => m.OccuredOn)
+            .OrderBy(m => m.OccurredOn)
             .Take(20)
             .ToListAsync(cancellationToken);
 
@@ -62,7 +62,7 @@ public class OutboxProcessor : BackgroundService
                 message.Error = null;
 
                 _logger.LogInformation(
-                    "Outbox message {MessageId} type {Type} has been sent to Service Bus.",
+                    "Outbox message {MessageId} of type {Type} sent to Service Bus.",
                     message.Id, message.Type);
             }
             catch (Exception ex)
@@ -70,7 +70,7 @@ public class OutboxProcessor : BackgroundService
                 message.Error = ex.Message;
 
                 _logger.LogError(ex,
-                    "Error sending outbox message {MessageId}", message.Id);
+                    "Failed to send outbox message {MessageId}.", message.Id);
             }
         }
 

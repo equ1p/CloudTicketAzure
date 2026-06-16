@@ -4,6 +4,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CloudTicketAzure.Features.Users;
 
+[ApiController]
+[Route("api/[controller]")]
 public class UsersController : ControllerBase
 {
     private readonly ApplicationDbContext _context;

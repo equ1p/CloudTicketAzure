@@ -1,4 +1,3 @@
-using System.Text.Json;
 using CloudTicketAzure.Core.Interfaces;
 
 namespace CloudTicketAzure.Middleware;
@@ -26,7 +25,7 @@ public class IdempotencyMiddleware
             context.Response.StatusCode = 400;
             await context.Response.WriteAsJsonAsync(new
             {
-                error = "Title 'Idempotency-Key' is required for this endpoint.'"
+                error = "The 'Idempotency-Key' header is required for this endpoint."
             });
             return;
         }

@@ -9,7 +9,6 @@ using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Controllers and OpenApi
 builder.Services.AddControllers();
 builder.Services.AddOpenApi();
 
@@ -30,14 +29,16 @@ builder.Services.AddSingleton(sp =>
 builder.Services.AddSingleton<IIdempotencyService, IdempotencyService>();
 
 // Azure Service Bus
-
 builder.Services.AddSingleton(sp =>
     new ServiceBusClient(
         builder.Configuration.GetConnectionString("AzureServiceBus")));
 
 builder.Services.AddSingleton<IServiceBusPublisher, ServiceBusPublisher>();
 
-// Application services
+// Application Services
+builder.Services.AddScoped<TicketService>();
+
+// Background Services
 builder.Services.AddHostedService<OutboxProcessor>();
 
 // CORS
@@ -51,11 +52,8 @@ builder.Services.AddCors(options =>
     });
 });
 
-
-
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
@@ -64,9 +62,7 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseCors("AllowFrontend");
 app.UseAuthorization();
-
 app.UseMiddleware<IdempotencyMiddleware>();
-
 app.MapControllers();
 
 app.Run();

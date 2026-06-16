@@ -1,45 +1,43 @@
-﻿using Azure;
+using Azure;
 using Azure.Data.Tables;
 using CloudTicketAzure.Core.Interfaces;
 
-namespace CloudTicketAzure.Infrastructure.Services
+namespace CloudTicketAzure.Infrastructure.Services;
+
+public class IdempotencyService : IIdempotencyService
 {
-    public class IdempotencyService : IIdempotencyService
+    private readonly TableClient _tableClient;
+    private const string TableName = "IdempotencyKeys";
+    private const string PartitionKey = "idempotency";
+
+    public IdempotencyService(TableServiceClient tableServiceClient)
     {
-        private readonly TableClient _tableClient;
-        private const string TableName = "IdempotencyKeys";
-        private const string PartitionKey = "idempotency";
+        _tableClient = tableServiceClient.GetTableClient(TableName);
+        _tableClient.CreateIfNotExists();
+    }
 
-        public IdempotencyService(TableClient tableServiceClient)
+    public async Task<string?> GetCachedResponseAsync(string key)
+    {
+        try
         {
-            _tableClient = tableServiceClient.GetTableClient(TableName);
-            _tableClient.CreateIfNotExists();
+            var response = await _tableClient.GetEntityAsync<TableEntity>(PartitionKey, key);
+            return response.Value.GetString("ResponseBody");
         }
-
-        public async Task<string?> GetCachedResponseAsync(string key)
+        catch (RequestFailedException ex) when (ex.Status == 404)
         {
-            try
-            {
-                var response = await _tableClient.GetEntityAsync<TableEntity>(PartitionKey, key);
-
-                return response.Value.GetString("ResponseBody");
-            }
-            catch (RequestFailedException ex) when (ex.Status == 404)
-            {
-                return null;
-            }
+            return null;
         }
+    }
 
-        public async Task SaveResponseAsync(string key, string responseJson, int statusCode)
+    public async Task SaveResponseAsync(string key, string responseJson, int statusCode)
+    {
+        var entity = new TableEntity(PartitionKey, key)
         {
-            var entity = new TableEntity(PartitionKey, key)
-            {
-                { "ResponseBody", responseJson },
-                { "StatusCode", statusCode },
-                { "CreatedAt", DateTimeOffset.UtcNow }
-            };
+            { "ResponseBody", responseJson },
+            { "StatusCode", statusCode },
+            { "CreatedAt", DateTimeOffset.UtcNow }
+        };
 
-            await _tableClient.UpsertEntityAsync(entity);
-        }
+        await _tableClient.UpsertEntityAsync(entity);
     }
 }

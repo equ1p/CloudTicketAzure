@@ -1,5 +1,5 @@
 import { Container, Row, Col } from 'react-bootstrap';
-import { BsTicketPerforated, BsGithub, BsCloud } from 'react-icons/bs';
+import { BsTicketPerforated, BsEnvelope, BsGeoAlt } from 'react-icons/bs';
 
 export default function Footer() {
   return (
@@ -12,25 +12,24 @@ export default function Footer() {
               <span className="fw-bold">CloudTicket</span>
             </div>
             <small className="text-secondary">
-              Reliable ticketing platform.
+              Your trusted ticketing platform.
             </small>
           </Col>
           <Col md={4} className="text-center mb-3 mb-md-0">
-            <div className="d-flex justify-content-center gap-3">
-              <span className="badge bg-secondary bg-opacity-25 text-light">
-                <BsCloud className="me-1" /> Azure
-              </span>
-              <span className="badge bg-secondary bg-opacity-25 text-light">
-                .NET 10
-              </span>
-              <span className="badge bg-secondary bg-opacity-25 text-light">
-                React
-              </span>
+            <div className="d-flex flex-column align-items-center gap-1">
+              <div className="d-flex align-items-center gap-2 text-secondary">
+                <BsEnvelope size={14} />
+                <small>support@cloudticket.io</small>
+              </div>
+              <div className="d-flex align-items-center gap-2 text-secondary">
+                <BsGeoAlt size={14} />
+                <small>Available worldwide</small>
+              </div>
             </div>
           </Col>
           <Col md={4} className="text-center text-md-end">
             <small className="text-secondary">
-              © {new Date().getFullYear()} CloudTicket. Educational project.
+              © {new Date().getFullYear()} CloudTicket. All rights reserved.
             </small>
           </Col>
         </Row>

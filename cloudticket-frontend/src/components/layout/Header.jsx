@@ -31,7 +31,7 @@ export default function Header() {
               to="/"
               className={({ isActive }) => isActive ? 'active' : ''}
             >
-              Main Page
+              Home
             </Nav.Link>
             <Nav.Link 
               as={NavLink} 

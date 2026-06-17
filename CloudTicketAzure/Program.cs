@@ -60,9 +60,12 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+app.UseDefaultFiles();
+app.UseStaticFiles();
 app.UseCors("AllowFrontend");
 app.UseAuthorization();
 app.UseMiddleware<IdempotencyMiddleware>();
 app.MapControllers();
+app.MapFallbackToFile("index.html");
 
 app.Run();
